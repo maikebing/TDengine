@@ -95,9 +95,9 @@ void cleanupExecute( SExceptionNode* node, bool failed );
 
 void exceptionPushNode( SExceptionNode* node );
 int32_t exceptionPopNode();
-void exceptionThrow( int code );
+void exceptionThrow( int32_t code );
 
-#define TRY(maxCleanupActions) do { \
+#define TRY( maxCleanupActions ) do { \
     SExceptionNode exceptionNode = { 0 }; \
     SCleanupAction cleanupActions[(maxCleanupActions) > 0 ? (maxCleanupActions) : 1]; \
     exceptionNode.maxCleanupAction = (maxCleanupActions) > 0 ? (maxCleanupActions) : 1; \
@@ -106,10 +106,10 @@ void exceptionThrow( int code );
     int caughtException = setjmp( exceptionNode.jb ); \
     if( caughtException == 0 )
 
-#define CATCH( code ) int code = exceptionPopNode(); \
+#define CATCH( code ) int32_t code = exceptionPopNode(); \
     if( caughtException == 1 )
 
-#define FINALLY( code ) int code = exceptionPopNode();
+#define FINALLY( code ) int32_t code = exceptionPopNode();
 
 #define END_TRY } while( 0 );
 

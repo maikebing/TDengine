@@ -92,6 +92,7 @@ typedef struct {
 // common functions & macros for both reader & writer
 
 #define tbufTell( buf ) ((buf)->pos)
+#define tbufGetSize( buf ) ((buf)->size)
 
 
 ////////////////////////////////////////////////////////////////////////////////
