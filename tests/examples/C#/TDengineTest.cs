@@ -43,11 +43,11 @@ namespace TDengineDriver
     private long batchRows;
     private long beginTimestamp = 1551369600000L;
 
-    private long conn = 0;
+    private IntPtr conn = IntPtr.Zero;
     private long rowsInserted = 0;
 
     static void Main(string[] args)
-    {
+     {
       TDengineTest tester = new TDengineTest();
       tester.ReadArgument(args);
 
@@ -191,7 +191,7 @@ namespace TDengineDriver
     {
       string db = "";
       this.conn = TDengine.Connect(this.host, this.user, this.password, db, this.port);
-      if (this.conn == 0)
+      if (this.conn == IntPtr.Zero)
       {
         Console.WriteLine("Connect to TDengine failed");
         ExitProgram();
@@ -339,8 +339,8 @@ namespace TDengineDriver
           //Console.WriteLine("index:" + j + ", type:" + meta.type + ", typename:" + meta.TypeName() + ", name:" + meta.name + ", size:" + meta.size);
         }
 
-        long result = TDengine.UseResult(conn);
-        if (result == 0)
+        IntPtr result = TDengine.UseResult(conn);
+        if (result == IntPtr.Zero)
         {
           Console.WriteLine(sql + " result set is null");
           return;
@@ -353,7 +353,7 @@ namespace TDengineDriver
           for (int fields = 0; fields < fieldCount; ++fields)
           {
             TDengineMeta meta = metas[fields];
-            int offset = 8 * fields;
+            int offset = (Environment.Is64BitProcess? 8:4) * fields;
             IntPtr data = Marshal.ReadIntPtr(rowdata, offset);
 
             //Console.Write("---");
@@ -413,7 +413,7 @@ namespace TDengineDriver
 
         if (TDengine.ErrorNo(conn) != 0)
         {
-          Console.Write("Query is not complete， Error {0:G}", TDengine.ErrorNo(conn), TDengine.Error(conn));
+          Console.Write("Query is not complete， Error {0:G} {1}", TDengine.ErrorNo(conn), TDengine.Error(conn));
         }
 
         TDengine.FreeResult(result);
@@ -428,7 +428,7 @@ namespace TDengineDriver
 
     public void CloseConnection()
     {
-      if (conn != 0)
+      if (conn != IntPtr.Zero)
       {
         TDengine.Close(conn);
       }

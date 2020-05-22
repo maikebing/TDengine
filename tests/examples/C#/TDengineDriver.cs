@@ -89,40 +89,40 @@ namespace TDengineDriver
     static extern public void Options(int option, string value);
 
     [DllImport("taos.dll", EntryPoint = "taos_connect", CallingConvention = CallingConvention.StdCall)]
-    static extern public long Connect(string ip, string user, string password, string db, int port);
+    static extern public IntPtr Connect(string ip, string user, string password, string db, int port);
 
     [DllImport("taos.dll", EntryPoint = "taos_errstr", CallingConvention = CallingConvention.StdCall)]
-    static extern private IntPtr taos_errstr(long taos);
-    static public string Error(long conn)
+    static extern private IntPtr taos_errstr(IntPtr taos);
+    static public string Error(IntPtr conn)
     {
       IntPtr errPtr = taos_errstr(conn);
       return Marshal.PtrToStringAnsi(errPtr);
     }
 
     [DllImport("taos.dll", EntryPoint = "taos_errno", CallingConvention = CallingConvention.StdCall)]
-    static extern public int ErrorNo(long taos);
+    static extern public int ErrorNo(IntPtr taos);
 
     [DllImport("taos.dll", EntryPoint = "taos_query", CallingConvention = CallingConvention.StdCall)]
-    static extern public int Query(long taos, string sqlstr);
+    static extern public int Query(IntPtr taos, string sqlstr);
 
     [DllImport("taos.dll", EntryPoint = "taos_affected_rows", CallingConvention = CallingConvention.StdCall)]
-    static extern public int AffectRows(long taos);
+    static extern public int AffectRows(IntPtr taos);
 
     [DllImport("taos.dll", EntryPoint = "taos_use_result", CallingConvention = CallingConvention.StdCall)]
-    static extern public long UseResult(long taos);
+    static extern public IntPtr UseResult(IntPtr taos);
 
     [DllImport("taos.dll", EntryPoint = "taos_field_count", CallingConvention = CallingConvention.StdCall)]
-    static extern public int FieldCount(long taos);
+    static extern public int FieldCount(IntPtr taos);
 
     [DllImport("taos.dll", EntryPoint = "taos_fetch_fields", CallingConvention = CallingConvention.StdCall)]
-    static extern private IntPtr taos_fetch_fields(long res);
-    static public List<TDengineMeta> FetchFields(long taos)
+    static extern private IntPtr taos_fetch_fields(IntPtr res);
+    static public List<TDengineMeta> FetchFields(IntPtr taos)
     {
       const int fieldSize = 68;
 
       List<TDengineMeta> metas = new List<TDengineMeta>();
-      long result = TDengine.UseResult(taos);
-      if (result == 0)
+            IntPtr result = TDengine.UseResult(taos);
+      if (result == IntPtr.Zero)
       {
         return metas;
       }
@@ -145,12 +145,12 @@ namespace TDengineDriver
     }
 
     [DllImport("taos.dll", EntryPoint = "taos_fetch_row", CallingConvention = CallingConvention.StdCall)]
-    static extern public IntPtr FetchRows(long res);
+    static extern public IntPtr FetchRows(IntPtr res);
 
     [DllImport("taos.dll", EntryPoint = "taos_free_result", CallingConvention = CallingConvention.StdCall)]
-    static extern public IntPtr FreeResult(long res);
+    static extern public IntPtr FreeResult(IntPtr res);
 
     [DllImport("taos.dll", EntryPoint = "taos_close", CallingConvention = CallingConvention.StdCall)]
-    static extern public int Close(long taos);
+    static extern public int Close(IntPtr taos);
   }
 }
